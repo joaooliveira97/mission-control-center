@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-pages": "ng build --prod=true && cp ./dist/mission-control-center/index.html ./dist/mission-control-center/404.html",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
