@@ -1,0 +1,107 @@
+<div id=body fxLayout="column">
+    <div class="addVideos" fxLayout="row warp" fxLayoutAlign="space-between center">
+        <button mat-raised-button [routerLink]="['/']" color="basic">Free Grid</button>
+        <div fxLayout="row warp" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+            <button [disabled]="!hasVideos()" mat-raised-button (click)="saveVideosToLocalStorage()"
+                color="basic">Save</button>
+            <button [disabled]="!videosSavedBol" mat-raised-button (click)="deleteVideosFromLocalStorage()"
+                color="basic">Delete</button>
+            <mat-slide-toggle [disabled]="videos?.length == 0" [(ngModel)]="deleteVideosBool" color="warn">
+                Remove Mode
+            </mat-slide-toggle>
+            <button *ngIf="deleteVideosBool && videos?.length > 1" mat-raised-button (click)="removeAllVideos()"
+                color="warn">Remove All</button>
+        </div>
+    </div>
+    <div fxFlex fxLayout="column" id="videos" #videosDiv>
+        <div fxFlex="55%" fxLayout="row warp" fxLayoutAlign="space-around center">
+            <div style="position: relative; width: 50vw; height: 100%;">
+                <youtube-player [videoId]="videos[0]" suggestedQuality="highres" width="100%" height="100%">
+                </youtube-player>
+                <div *ngIf="deleteVideosBool && videos[0]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <button mat-fab color="warn" (click)="removeVideo(0)">X</button>
+                </div>
+                <div class="addVideo" *ngIf="!videos[0]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo(0)">
+                        <mat-label>Youtube Url</mat-label>
+                        <input matInput [disabled]="deleteVideosBool" [(ngModel)]="videoToAdd[0]">
+                    </mat-form-field>
+                    <button mat-raised-button [disabled]="deleteVideosBool" (click)="addVideo(0)"
+                        color="basic">Add</button>
+                </div>
+            </div>
+            <div style="position: relative; ; width: 50vw; height: 100%;">
+                <youtube-player [videoId]="videos[1]" suggestedQuality="highres" width="100%" height="100%">
+                </youtube-player>
+                <div *ngIf="deleteVideosBool && videos[1]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <button mat-fab color="warn" (click)="removeVideo(1)">X</button>
+                </div>
+                <div class="addVideo" *ngIf="!videos[1]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo(1)">
+                        <mat-label>Youtube Url</mat-label>
+                        <input matInput [disabled]="deleteVideosBool" [(ngModel)]="videoToAdd[1]">
+                    </mat-form-field>
+                    <button mat-raised-button [disabled]="deleteVideosBool" (click)="addVideo(1)"
+                        color="basic">Add</button>
+                </div>
+            </div>
+        </div>
+        <div fxFlex="45%" fxLayout="row warp" fxLayoutAlign="space-around center">
+            <div style="position: relative; ; width: 33vw; height: 100%;">
+                <youtube-player [videoId]="videos[2]" suggestedQuality="highres" width="100%" height="100%">
+                </youtube-player>
+                <div *ngIf="deleteVideosBool && videos[2]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <button mat-fab color="warn" (click)="removeVideo(2)">X</button>
+                </div>
+                <div class="addVideo" *ngIf="!videos[2]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo(2)">
+                        <mat-label>Youtube Url</mat-label>
+                        <input matInput [disabled]="deleteVideosBool" [(ngModel)]="videoToAdd[2]">
+                    </mat-form-field>
+                    <button mat-raised-button [disabled]="deleteVideosBool" (click)="addVideo(2)"
+                        color="basic">Add</button>
+                </div>
+            </div>
+            <div style="position: relative; ; width: 33%; height: 100%;">
+                <youtube-player [videoId]="videos[3]" suggestedQuality="highres" width="100%" height="100%">
+                </youtube-player>
+                <div *ngIf="deleteVideosBool && videos[3]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <button mat-fab color="warn" (click)="removeVideo(3)">X</button>
+                </div>
+                <div class="addVideo" *ngIf="!videos[3]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo(3)">
+                        <mat-label>Youtube Url</mat-label>
+                        <input matInput [disabled]="deleteVideosBool" [(ngModel)]="videoToAdd[3]">
+                    </mat-form-field>
+                    <button mat-raised-button [disabled]="deleteVideosBool" (click)="addVideo(3)"
+                        color="basic">Add</button>
+                </div>
+            </div>
+            <div style="position: relative; ; width: 33%; height: 100%;">
+                <youtube-player [videoId]="videos[4]" suggestedQuality="highres" width="100%" height="100%">
+                </youtube-player>
+                <div *ngIf="deleteVideosBool && videos[4]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <button mat-fab color="warn" (click)="removeVideo(4)">X</button>
+                </div>
+                <div class="addVideo" *ngIf="!videos[4]" fxLayout="row" fxLayoutAlign="center center"
+                    style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                    <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo(4)">
+                        <mat-label>Youtube Url</mat-label>
+                        <input matInput [disabled]="deleteVideosBool" [(ngModel)]="videoToAdd[4]">
+                    </mat-form-field>
+                    <button mat-raised-button [disabled]="deleteVideosBool" (click)="addVideo(4)"
+                        color="basic">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

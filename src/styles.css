@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background: black;
+    color: white;
+    overflow: hidden;
+}
+
+mat-label {
+    color: white;
+}
+
+.mat-input-element {
+    color: white;
+}
+
+.mat-input-element::placeholder {
+    color: white;
+  }
+
+.addVideos {
+    padding: 0px 20px;
+    background-color: rgb(3, 161, 252);
+    color: white
+}
+
+#body {
+    height: 100vh;
+}
+
+#removeAll {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+#videos {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}

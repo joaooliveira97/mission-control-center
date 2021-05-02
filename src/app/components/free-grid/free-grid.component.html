@@ -1,0 +1,31 @@
+<div id=body fxLayout="column">
+    <div  class="addVideos" fxLayout="row warp" fxLayoutAlign="space-between center">
+      <button mat-raised-button [routerLink]="['/two-three']" color="basic">2 + 3 Grid</button>
+      <div fxFlex="50%" fxLayout="row warp" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo()">
+          <mat-label>Youtube Url</mat-label>
+          <input matInput [(ngModel)]="videoToAdd">
+        </mat-form-field>
+        <button mat-raised-button (click)="addVideo()" color="basic">Add</button>
+      </div>
+      <div fxLayout="row warp" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <button [disabled]="videos?.length == 0" mat-raised-button (click)="saveVideosToLocalStorage()" color="basic">Save</button>
+        <button [disabled]="!videosSavedBol" mat-raised-button (click)="deleteVideosFromLocalStorage()" color="basic">Delete</button>
+        <mat-slide-toggle [disabled]="videos?.length == 0" [(ngModel)]="deleteVideosBool" color="warn">
+          Remove Mode
+        </mat-slide-toggle>
+      </div>
+    </div>
+    <div fxFlex id="videos" #videosDiv fxLayout="row warp" fxLayoutAlign="space-around center">
+      <div *ngFor="let video of videos; let i = index" style="position: relative;" [style.width]="videoProperties.width" [style.height]="videoProperties.height">
+        <youtube-player [videoId]="video" suggestedQuality="highres"
+          width="100%" height="100%">
+        </youtube-player>
+        <div *ngIf="deleteVideosBool" fxLayout="row" fxLayoutAlign="center center" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+          <button mat-fab color="warn" (click)="removeVideo(i)">X</button>
+        </div>
+      </div>
+      <button *ngIf="deleteVideosBool && videos?.length > 1" id="removeAll" mat-raised-button (click)="removeAllVideos()" color="warn">Remove All</button>
+      <h1 *ngIf="videos?.length == 0" style="color: white;">Insira videos do Youtube</h1>
+    </div>
+  </div>
