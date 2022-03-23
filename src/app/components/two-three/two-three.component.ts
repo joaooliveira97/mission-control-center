@@ -5,7 +5,7 @@ import { Utils } from 'src/app/common/utils';
 @Component({
   selector: 'app-two-three',
   templateUrl: './two-three.component.html',
-  styleUrls: ['./two-three.component.css']
+  styleUrls: ['./two-three.component.scss']
 })
 export class TwoThreeComponent implements OnInit {
 

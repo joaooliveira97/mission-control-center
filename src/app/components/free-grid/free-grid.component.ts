@@ -5,7 +5,7 @@ import { Utils } from 'src/app/common/utils';
 @Component({
   selector: 'app-free-grid',
   templateUrl: './free-grid.component.html',
-  styleUrls: ['./free-grid.component.css']
+  styleUrls: ['./free-grid.component.scss']
 })
 export class FreeGridComponent implements OnInit, AfterViewInit {
 
