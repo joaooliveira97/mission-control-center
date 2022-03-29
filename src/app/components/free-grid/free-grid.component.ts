@@ -92,4 +92,10 @@ export class FreeGridComponent implements OnInit, AfterViewInit {
     return (9 * width) / 16;
   }
 
+  focus(event: Event) {
+    console.log('hover');
+    
+    event.stopPropagation();
+  }
+
 }

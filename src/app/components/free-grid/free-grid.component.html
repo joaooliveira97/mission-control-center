@@ -1,5 +1,5 @@
 <div id=body fxLayout="column">
-    <div  class="addVideos" fxLayout="row warp" fxLayoutAlign="space-between center">
+    <div class="bg-cyan-700 flex-row flex-wrap justify-between items-center px-8">
       <button mat-raised-button [routerLink]="['/two-three']" color="basic">2 + 3 Grid</button>
       <div fxFlex="50%" fxLayout="row warp" fxLayoutAlign="space-between center" fxLayoutGap="10px">
         <mat-form-field style="min-width: 150px" fxFlex (keyup.enter)="addVideo()">
@@ -16,6 +16,11 @@
         </mat-slide-toggle>
       </div>
     </div>
+    <p-toolbar styleClass="bg-cyan-700 border-0 rounded-t-none">
+      <div class="p-toolbar-group-left">
+        <p-button label="2 + 3 Grid" [routerLink]="['/two-three']"></p-button>
+      </div>
+    </p-toolbar>
     <div fxFlex id="videos" #videosDiv fxLayout="row warp" fxLayoutAlign="space-around center">
       <div *ngFor="let video of videos; let i = index" style="position: relative;" [style.width]="videoProperties.width" [style.height]="videoProperties.height">
         <youtube-player [videoId]="video" suggestedQuality="highres"

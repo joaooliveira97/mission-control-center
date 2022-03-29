@@ -11,6 +11,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgModule } from '@angular/core';
 import { TwoThreeComponent } from './components/two-three/two-three.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
+import {ToolbarModule} from 'primeng/toolbar';
+import {ButtonModule} from 'primeng/button';
+
 
 @NgModule({
   declarations: [
@@ -19,6 +22,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
     TwoThreeComponent
   ],
   imports: [
+    AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
     FlexLayoutModule,
@@ -26,8 +30,9 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
     MatButtonModule,
     MatInputModule,
     MatSlideToggleModule,
+    ToolbarModule,
     YouTubePlayerModule,
-    AppRoutingModule,
+    ButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
