@@ -13,11 +13,12 @@
   outline: 2px solid var(--accent);
 }
 
-youtube-player,
+/*
+ * The player is sized in pixels from the tile (see StreamTile.size). Percentage sizes don't
+ * work here: the iframe sits inside wrapper divs with no height, so it fell back to 150px.
+ */
 youtube-player ::ng-deep iframe {
   display: block;
-  width: 100% !important;
-  height: 100% !important;
 }
 
 .controls {
