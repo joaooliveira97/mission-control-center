@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="203 61 848 816" role="img" aria-label="Mission Control">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="203 -4 848 848" role="img" aria-label="Mission Control">
   <title>Mission Control</title>
   <defs>
     <clipPath id="mc-p1"><rect x="358" y="240" width="246" height="185" rx="7"/></clipPath>
@@ -7,7 +7,7 @@
     <clipPath id="mc-p4"><rect x="650" y="469" width="246" height="175" rx="7"/></clipPath>
   </defs>
 
-  <rect x="203" y="61" width="848" height="816" rx="118" fill="#031439"/>
+  <rect x="203" y="-4" width="848" height="848" rx="118" fill="#031439"/>
 
   <!-- orbit: two slightly offset ellipses, so the ring tapers like the original -->
   <path fill="#FF761E" fill-rule="evenodd" d="M980.3 216.6A418.5 157 149.4 1 1 259.9 642.6A418.5 157 149.4 1 1 980.3 216.6ZM959.8 224.6A397 152.7 148.9 1 1 280 634.8A397 152.7 148.9 1 1 959.8 224.6Z"/>
@@ -64,8 +64,4 @@
     <circle cx="814.4" cy="755.4" r="217.4" fill="none" stroke="#0582FD" stroke-width="8.5"/>
   </g>
 
-  <g fill="#0582FD">
-    <path d="M521 773.3V707.3H552.5L570.7 740 588.5 707.3H620.5V773.3H601.5V735L570.7 765 540 735V773.3Z"/>
-    <path d="M649 707.3H733V727H660.5Q656.5 727 656.5 731V753Q656.5 757 660.5 757H733V773.3H649Q637 773.3 637 761.3V719.3Q637 707.3 649 707.3Z"/>
-  </g>
 </svg>
