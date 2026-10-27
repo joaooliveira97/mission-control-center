@@ -1,0 +1,107 @@
+<header class="bar">
+  <div class="brand">
+    <span class="live-dot" [class.on]="store.count() > 0" aria-hidden="true"></span>
+    <h1>Mission Control</h1>
+    <time class="clock" title="Hora UTC">{{ utc() }} UTC</time>
+  </div>
+
+  <form class="add" (submit)="$event.preventDefault(); add(url)">
+    <input
+      #url
+      type="text"
+      inputmode="url"
+      placeholder="Link de um direto do YouTube"
+      aria-label="Link de um vídeo do YouTube"
+      [attr.aria-invalid]="error() ? true : null"
+      aria-describedby="add-error"
+      (input)="error.set('')"
+    />
+    <button type="submit" class="primary">
+      <app-icon name="add" />
+      <span>Adicionar</span>
+    </button>
+    <p id="add-error" class="error" role="alert">{{ error() }}</p>
+  </form>
+
+  <div class="tools">
+    <div class="segmented" role="radiogroup" aria-label="Disposição">
+      @for (layout of layouts; track layout.value) {
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="store.layout() === layout.value"
+          [title]="layout.hint"
+          (click)="store.layout.set(layout.value)"
+        >
+          {{ layout.label }}
+        </button>
+      }
+    </div>
+    <button
+      type="button"
+      class="icon"
+      title="Silenciar tudo"
+      [disabled]="store.allMuted()"
+      (click)="store.muteAll()"
+    >
+      <app-icon name="volumeOff" />
+    </button>
+    <button
+      type="button"
+      class="icon"
+      title="Copiar link para partilhar"
+      [disabled]="store.count() === 0"
+      (click)="share()"
+    >
+      <app-icon name="link" />
+    </button>
+    <button
+      type="button"
+      class="icon"
+      title="Remover todos"
+      [disabled]="store.count() === 0"
+      (click)="clear()"
+    >
+      <app-icon name="trash" />
+    </button>
+    <button type="button" class="icon" title="Ecrã inteiro" (click)="toggleFullscreen()">
+      <app-icon name="fullscreen" />
+    </button>
+  </div>
+</header>
+
+<main
+  #wall
+  class="wall"
+  [style.grid-template-columns]="plan().columns"
+  [style.grid-template-rows]="plan().rows"
+>
+  @for (stream of store.domOrder(); track stream.id) {
+    @let position = positions().get(stream.id) ?? 0;
+    <app-stream-tile
+      [stream]="stream"
+      [canPromote]="position > 0"
+      [style.order]="position"
+      [style.grid-column]="plan().cells[position].column"
+      [style.grid-row]="plan().cells[position].row"
+      (muteToggled)="store.toggleMute(stream.id)"
+      (soloed)="store.solo(stream.id)"
+      (promoted)="store.promote(stream.id)"
+      (removed)="store.remove(stream.id)"
+    />
+  } @empty {
+    <section class="empty">
+      <h2>Nenhum direto no ecrã</h2>
+      <p>
+        Cola acima o link de um vídeo ou direto do YouTube. Funciona com links
+        <code>youtube.com/watch</code>, <code>/live/</code>, <code>/shorts/</code> e
+        <code>youtu.be</code>.
+      </p>
+      <p>Os vídeos ficam guardados neste browser e podes partilhar o ecrã inteiro com um link.</p>
+    </section>
+  }
+</main>
+
+@if (toast()) {
+  <div class="toast" role="status">{{ toast() }}</div>
+}

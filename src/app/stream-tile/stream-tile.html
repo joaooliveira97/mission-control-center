@@ -1,0 +1,31 @@
+<youtube-player
+  [videoId]="stream().id"
+  [playerVars]="playerVars()"
+  [disablePlaceholder]="true"
+  (ready)="onReady()"
+/>
+
+<div class="controls" role="toolbar" aria-label="Controlos do vídeo">
+  <button
+    type="button"
+    (click)="muteToggled.emit()"
+    [attr.aria-pressed]="!stream().muted"
+    [title]="stream().muted ? 'Ligar som' : 'Silenciar'"
+  >
+    <app-icon [name]="stream().muted ? 'volumeOff' : 'volumeOn'" />
+  </button>
+  <button type="button" (click)="soloed.emit()" title="Ouvir só este">
+    <app-icon name="headset" />
+  </button>
+  @if (canPromote()) {
+    <button type="button" (click)="promoted.emit()" title="Pôr em destaque">
+      <app-icon name="star" />
+    </button>
+  }
+  <button type="button" (click)="fullscreen()" title="Ecrã inteiro">
+    <app-icon name="fullscreen" />
+  </button>
+  <button type="button" class="danger" (click)="removed.emit()" title="Remover">
+    <app-icon name="close" />
+  </button>
+</div>

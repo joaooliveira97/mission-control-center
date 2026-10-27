@@ -1,16 +1,34 @@
 # Mission Control Center
 
-[View Online](https://joaooliveira97.github.io/mission-control-center/)
+[Abrir online](https://joaooliveira97.github.io/mission-control-center/)
 
-A little project build with angular to display multiple videos from YouTube in a grid view. This projects uses angular material and angular YouTube player to display the videos.
+Um centro de controlo para ver vários diretos do YouTube ao mesmo tempo, numa só grelha. Nasceu para acompanhar os lançamentos da Starship com todas as câmaras abertas.
 
-There are two grid modes available:
+## O que faz
 
-- Free grid: where all added videos are displayed with the same size in a grid view
-- 2+3 grid: where are 2 videos in a bigger size and another row with 3 more videos with smaller sizes.
+- Cola qualquer link do YouTube (`watch?v=`, `/live/`, `/shorts/`, `/embed/`, `youtu.be`) ou só o ID do vídeo.
+- Três disposições:
+  - **Grelha**: todos com o mesmo tamanho, com o número de colunas escolhido para aproveitar melhor o ecrã.
+  - **Destaque**: um vídeo grande e os restantes numa coluna ao lado.
+  - **Palco**: dois vídeos grandes em cima e os restantes em baixo (o antigo "2 + 3").
+- Só o primeiro vídeo começa com som. Cada vídeo tem botões para ligar/desligar o som, ouvir só esse, pô-lo em destaque, abrir em ecrã inteiro ou removê-lo.
+- Relógio UTC no topo, útil para seguir as contagens decrescentes.
+- Os vídeos ficam guardados no browser automaticamente (incluindo os que tinham sido guardados na versão antiga).
+- O botão de partilha copia um link com todos os vídeos e a disposição, por exemplo `…/#v=ID1,ID2,ID3&layout=focus`.
 
-Each grid has the possibility to save the current videos in browser local storage.
+## Desenvolvimento
 
+Precisa de Node.js 22.22.3+ ou 24 (ver `.nvmrc`).
 
-The docs folder contains the compiled website to be deployed in GitHub pages.
+```bash
+npm install
+npm start        # http://localhost:4200
+npm test         # testes unitários (Vitest)
+npm run build    # build de produção em dist/
+```
 
+Feito com Angular 22 (componentes standalone, signals, sem zone.js) e `@angular/youtube-player`.
+
+## Publicação
+
+Cada push para `main` corre os testes e publica no GitHub Pages através do workflow em `.github/workflows/deploy.yml`.

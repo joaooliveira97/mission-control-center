@@ -1,47 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: dark;
+  --bg: #05070d;
+  --surface: #0b111c;
+  --raised: #152033;
+  --line: #22304a;
+  --text: #e6edf7;
+  --muted: #8796ad;
+  --accent: #38b6ff;
+  --on-accent: #02101c;
+  --live: #ff3b3b;
+  --danger: #ff5c5c;
+  --radius: 8px;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+}
 
-html, body {
-    height: 100%;
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    background: black;
-    color: white;
-    overflow: hidden;
-}
-
-mat-label {
-    color: white;
-}
-
-.mat-input-element {
-    color: white;
-}
-
-.mat-input-element::placeholder {
-    color: white;
-  }
-
-.addVideos {
-    padding: 0px 20px;
-    background-color: rgb(3, 161, 252);
-    color: white
-}
-
-#body {
-    height: 100vh;
-}
-
-#removeAll {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-}
-
-#videos {
-    position: relative;
-    height: 100%;
-    width: 100%;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  overflow: hidden;
 }
