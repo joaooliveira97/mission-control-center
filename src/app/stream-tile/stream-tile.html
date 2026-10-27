@@ -23,6 +23,18 @@
 <span class="badge" [attr.data-platform]="source.platform">{{ platform().label }}</span>
 
 <div class="controls" role="toolbar" aria-label="Controlos do vídeo">
+  @if (canMove()) {
+    <button
+      type="button"
+      class="grip"
+      title="Arrastar para mudar de posição (ou usa as setas)"
+      aria-label="Mudar de posição"
+      (pointerdown)="dragStarted.emit($event)"
+      (keydown)="nudge($event)"
+    >
+      <app-icon name="drag" />
+    </button>
+  }
   @if (platform().hasAudio) {
     <button
       type="button"

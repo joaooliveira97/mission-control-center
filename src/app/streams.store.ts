@@ -77,9 +77,19 @@ export class StreamsStore {
 
   /** Moves a stream to the main slot. */
   promote(key: string) {
+    this.move(key, 0);
+  }
+
+  /** Moves a stream to another display position. Only CSS changes, so no iframe reloads. */
+  move(key: string, index: number) {
     this.streams.update((list) => {
       const stream = list.find((s) => s.key === key);
-      return stream ? [stream, ...list.filter((s) => s !== stream)] : list;
+      if (!stream) {
+        return list;
+      }
+      const rest = list.filter((s) => s !== stream);
+      const to = Math.max(0, Math.min(index, rest.length));
+      return [...rest.slice(0, to), stream, ...rest.slice(to)];
     });
   }
 
