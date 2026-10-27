@@ -42,7 +42,8 @@
 .badge[data-platform='facebook'] {
   --platform: #0866ff;
 }
-.badge[data-platform='x'] {
+.badge[data-platform='x'],
+.badge[data-platform='xBroadcast'] {
   --platform: #e7e9ea;
 }
 

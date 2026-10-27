@@ -10,7 +10,7 @@ Um centro de controlo para ver vários diretos do YouTube ao mesmo tempo, numa s
   - **YouTube**: `watch?v=`, `/live/`, `/shorts/`, `/embed/`, `youtu.be` ou só o ID do vídeo.
   - **Twitch** e **Kick**: o link do canal (`twitch.tv/nasa`, `kick.com/canal`).
   - **Facebook**: o link de um vídeo ou direto público (`…/videos/…`, `watch/?v=…`, `watch/live/?v=…`).
-  - **X**: o link do post que tem o direto (`x.com/conta/status/…`). O X não tem um player de vídeo para incorporar, por isso aparece o post inteiro. O vídeo toca dentro dele quando o X o permite e o som não pode ser controlado pela página. Links `x.com/i/broadcasts/…` não funcionam.
+  - **X**: o link da transmissão (`x.com/i/broadcasts/…`), que mostra só o vídeo com o widget Broadcast do X, ou o link de um post (`x.com/conta/status/…`), que mostra o post inteiro. Em ambos o som não pode ser controlado pela página.
 - Três disposições:
   - **Grelha**: todos com o mesmo tamanho, com o número de colunas escolhido para aproveitar melhor o ecrã.
   - **Destaque**: um vídeo grande e os restantes numa coluna ao lado.

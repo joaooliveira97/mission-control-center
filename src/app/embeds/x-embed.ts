@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  computed,
   inject,
   input,
   signal,
@@ -12,7 +13,7 @@ import {
 import { PLATFORMS } from '../sources';
 import { loadScript } from './load-script';
 
-// https://developer.x.com/en/docs/x-for-websites/embedded-tweets/guides/embedded-tweet-javascript-factory-function
+// https://developer.x.com/en/docs/x-for-websites/javascript-api/overview
 const SCRIPT = 'https://platform.twitter.com/widgets.js';
 
 declare global {
@@ -24,29 +25,25 @@ declare global {
           element: HTMLElement,
           options: Record<string, unknown>,
         ): Promise<HTMLElement | undefined>;
-        /** The video-only embed. X no longer documents it, so it may not exist. */
-        createVideo?(
-          id: string,
-          element: HTMLElement,
-          options: Record<string, unknown>,
-        ): Promise<HTMLElement | undefined>;
+        /** Turns widget markup (such as a blockquote) inside element into embeds. */
+        load(element?: HTMLElement): Promise<unknown>;
       };
     };
   }
 }
 
 /**
- * X has no documented video-only embed. This tries the old video embed first and
- * otherwise shows the whole post, whose video plays inside it when X allows it.
- * If neither loads, there's a link to X.
+ * Embeds from X. A broadcast (x.com/i/broadcasts/…) uses X's Broadcast widget, the one
+ * publish.x.com generates, which shows just the live video. A post shows the whole post,
+ * since X has no video-only embed for posts.
  */
 @Component({
   selector: 'app-x-embed',
   template: `
-    <div #target class="post" [hidden]="failed()"></div>
+    <div #target class="embed" [class.broadcast]="broadcast()" [hidden]="failed()"></div>
     @if (failed()) {
       <p class="fallback">
-        Não foi possível mostrar este post.
+        Não foi possível mostrar isto aqui.
         <a [href]="url()" target="_blank" rel="noopener">Abrir no X</a>
       </p>
     }
@@ -60,8 +57,11 @@ declare global {
       overflow: auto;
       background: #000;
     }
-    .post {
+    .embed {
       width: min(100%, 550px);
+    }
+    .embed.broadcast {
+      width: 100%;
     }
     .fallback {
       color: var(--muted);
@@ -74,14 +74,15 @@ declare global {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class XEmbed {
-  /** Post id. */
+  /** Post or broadcast id. */
   readonly id = input.required<string>();
+  readonly broadcast = input(false);
 
   private readonly target = viewChild.required<ElementRef<HTMLElement>>('target');
   protected readonly failed = signal(false);
-  protected url() {
-    return PLATFORMS.x.url(this.id());
-  }
+  protected readonly url = computed(() =>
+    (this.broadcast() ? PLATFORMS.xBroadcast : PLATFORMS.x).url(this.id()),
+  );
 
   constructor() {
     const destroyRef = inject(DestroyRef);
@@ -94,21 +95,57 @@ export class XEmbed {
         }
         const widgets = window.twttr!.widgets;
         const element = this.target().nativeElement;
-        const options = { theme: 'dark', dnt: true, align: 'center' };
-        // Prefer the video on its own; fall back to the whole post, without the thread above it.
-        const video = await widgets
-          .createVideo?.(this.id(), element, options)
-          .catch(() => undefined);
-        if (!video) {
-          element.replaceChildren();
+        if (this.broadcast()) {
+          element.append(this.broadcastMarkup());
+          await widgets.load(element);
+          // The widget replaces the blockquote with an iframe when it works.
+          this.failed.set(!(await waitForIframe(element, 10_000)));
+        } else {
+          const post = await widgets.createTweet(this.id(), element, {
+            theme: 'dark',
+            dnt: true,
+            align: 'center',
+            conversation: 'none',
+          });
+          this.failed.set(!post);
         }
-        const embed =
-          video ??
-          (await widgets.createTweet(this.id(), element, { ...options, conversation: 'none' }));
-        this.failed.set(!embed);
       } catch {
         this.failed.set(true);
       }
     });
   }
+
+  /** The markup publish.x.com generates for a broadcast, which widgets.js turns into a player. */
+  private broadcastMarkup(): HTMLElement {
+    const quote = document.createElement('blockquote');
+    quote.className = 'twitter-broadcast';
+    quote.dataset['broadcastId'] = this.id();
+    quote.dataset['theme'] = 'dark';
+    quote.dataset['dnt'] = 'true';
+    const link = document.createElement('a');
+    link.href = this.url();
+    link.textContent = this.url();
+    quote.append(link);
+    return quote;
+  }
+}
+
+function waitForIframe(element: HTMLElement, timeout: number): Promise<boolean> {
+  if (element.querySelector('iframe')) {
+    return Promise.resolve(true);
+  }
+  return new Promise((resolve) => {
+    const observer = new MutationObserver(() => {
+      if (element.querySelector('iframe')) {
+        done(true);
+      }
+    });
+    const timer = setTimeout(() => done(false), timeout);
+    const done = (found: boolean) => {
+      observer.disconnect();
+      clearTimeout(timer);
+      resolve(found);
+    };
+    observer.observe(element, { childList: true, subtree: true });
+  });
 }

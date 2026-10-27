@@ -49,6 +49,11 @@ describe('parseSource', () => {
       { platform: 'x', id: '1850000000000000000' },
     ],
     ['https://x.com/i/status/1850000000000000000', { platform: 'x', id: '1850000000000000000' }],
+    ['https://x.com/i/broadcasts/1mGPaZgYgLDJN', { platform: 'xBroadcast', id: '1mGPaZgYgLDJN' }],
+    [
+      'twitter.com/i/broadcasts/1mGPaZgYgLDJN?s=20',
+      { platform: 'xBroadcast', id: '1mGPaZgYgLDJN' },
+    ],
   ])('reads %s', (input, expected) => {
     expect(parseSource(input)).toEqual(expected);
   });
@@ -65,7 +70,7 @@ describe('parseSource', () => {
     'https://kick.com/browse',
     'https://www.facebook.com/NASA',
     'https://x.com/SpaceX',
-    'https://x.com/i/broadcasts/1OyKAZVkLmvGb',
+    'https://x.com/i/broadcasts/',
   ])('rejects %s', (input) => {
     expect(parseSource(input)).toBeNull();
   });
@@ -78,6 +83,7 @@ describe('source keys', () => {
     { platform: 'kick', id: 'some-streamer' },
     { platform: 'facebook', id: '1234567890123' },
     { platform: 'x', id: '1850000000000000000' },
+    { platform: 'xBroadcast', id: '1mGPaZgYgLDJN' },
   ])('round-trips $platform', (source) => {
     expect(parseKey(sourceKey(source))).toEqual(source);
   });
@@ -92,10 +98,6 @@ describe('source keys', () => {
 });
 
 describe('unsupportedHint', () => {
-  it('explains X broadcast links', () => {
-    expect(unsupportedHint('https://x.com/i/broadcasts/1OyKAZVkLmvGb')).toContain('status');
-  });
-
   it('explains fb.watch short links', () => {
     expect(unsupportedHint('https://fb.watch/abc123/')).toContain('endereço completo');
   });
