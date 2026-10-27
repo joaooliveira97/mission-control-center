@@ -12,6 +12,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
+import { hostSize } from '../element-size';
 import { Icon } from '../icon';
 import { Stream } from '../streams.store';
 
@@ -37,6 +38,12 @@ export class StreamTile {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly player = viewChild.required(YouTubePlayer);
   private readonly ready = signal(false);
+
+  /**
+   * The YouTube player sizes its video from the size it is given, not from the iframe's CSS
+   * size, so it has to be told the tile's real size or the video stays small inside the tile.
+   */
+  protected readonly size = hostSize();
 
   // Only read once: changing playerVars would recreate the iframe.
   protected readonly playerVars = computed<YT.PlayerVars>(() => ({

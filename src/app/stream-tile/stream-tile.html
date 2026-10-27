@@ -2,6 +2,8 @@
   [videoId]="stream().id"
   [playerVars]="playerVars()"
   [disablePlaceholder]="true"
+  [width]="size()?.width"
+  [height]="size()?.height"
   (ready)="onReady()"
 />
 
