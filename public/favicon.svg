@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Mission Control">
+  <title>Mission Control</title>
+  <rect width="64" height="64" rx="14" fill="#031439"/>
+  <ellipse cx="32" cy="32" rx="33" ry="12" fill="none" stroke="#FF761E" stroke-width="3.2" transform="rotate(-31 32 32)"/>
+  <rect x="7" y="12.5" width="50" height="41" rx="5" fill="#031439"/>
+  <circle cx="57.9" cy="13" r="4" fill="#FF761E" stroke="#031439" stroke-width="3" paint-order="stroke"/>
+  <g fill="none" stroke="#0582FD" stroke-width="3">
+    <rect x="10.5" y="16" width="18" height="13.5" rx="3"/>
+    <rect x="35.5" y="16" width="18" height="13.5" rx="3"/>
+    <rect x="10.5" y="36.5" width="18" height="13.5" rx="3"/>
+    <rect x="35.5" y="36.5" width="18" height="13.5" rx="3"/>
+  </g>
+  <path fill="#FFFFFF" d="M19.5 18l1.6 2.8v8.2h-3.2v-8.2Z"/>
+  <circle cx="49" cy="20.5" r="1.8" fill="#FF761E"/>
+  <path fill="none" stroke="#0582FD" stroke-width="2" stroke-linecap="round" d="M13.5 46.5C18 45 20.5 40.5 25.5 40"/>
+  <path fill="none" stroke="#0582FD" stroke-width="2" d="M37 47.5C40.5 43 45 41.5 52 42.5"/>
+</svg>

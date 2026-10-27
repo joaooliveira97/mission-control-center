@@ -1,3 +1,5 @@
+<img src="public/logo.svg" alt="" width="120" align="right" />
+
 # Mission Control Center
 
 [Abrir online](https://joaooliveira97.github.io/mission-control-center/)
