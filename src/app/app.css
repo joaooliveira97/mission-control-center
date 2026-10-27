@@ -192,6 +192,13 @@ button.icon {
   color: var(--muted);
 }
 
+.empty-logo {
+  display: block;
+  width: min(180px, 40vw);
+  height: auto;
+  margin: 0 auto 20px;
+}
+
 .empty h2 {
   margin: 0 0 12px;
   font-size: 1.4rem;

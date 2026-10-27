@@ -1,6 +1,8 @@
-<img src="public/logo.svg" alt="" width="120" align="right" />
+<p align="center">
+  <img src="public/logo.svg" alt="Logo do Mission Control" width="180" />
+</p>
 
-# Mission Control Center
+<h1 align="center">Mission Control Center</h1>
 
 [Abrir online](https://joaooliveira97.github.io/mission-control-center/)
 
