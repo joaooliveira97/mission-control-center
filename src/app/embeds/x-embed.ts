@@ -10,6 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { elementSize, hostSize } from '../element-size';
 import { PLATFORMS } from '../sources';
 import { loadScript } from './load-script';
 
@@ -28,6 +29,8 @@ declare global {
         /** Turns widget markup (such as a blockquote) inside element into embeds. */
         load(element?: HTMLElement): Promise<unknown>;
       };
+      /** Runs callback once widgets.js has finished initialising. */
+      ready?(callback: () => void): void;
     };
   }
 }
@@ -40,7 +43,13 @@ declare global {
 @Component({
   selector: 'app-x-embed',
   template: `
-    <div #target class="embed" [class.broadcast]="broadcast()" [hidden]="failed()"></div>
+    <div
+      #target
+      class="embed"
+      [class.broadcast]="broadcast()"
+      [style.scale]="scale()"
+      [hidden]="failed()"
+    ></div>
     @if (failed()) {
       <p class="fallback">
         Não foi possível mostrar isto aqui.
@@ -60,8 +69,11 @@ declare global {
     .embed {
       width: min(100%, 550px);
     }
+    :host:has(.broadcast) {
+      overflow: hidden;
+    }
     .embed.broadcast {
-      width: 100%;
+      width: max-content;
     }
     .fallback {
       color: var(--muted);
@@ -79,6 +91,21 @@ export class XEmbed {
   readonly broadcast = input(false);
 
   private readonly target = viewChild.required<ElementRef<HTMLElement>>('target');
+
+  /**
+   * X draws the broadcast player at a fixed width (about 550px), so it is scaled to fill the
+   * tile while keeping its proportions.
+   */
+  private readonly tileSize = hostSize();
+  private readonly embedSize = elementSize(() => this.target().nativeElement);
+  protected readonly scale = computed(() => {
+    const tile = this.tileSize();
+    const embed = this.embedSize();
+    if (!this.broadcast() || !tile || !embed?.width || !embed.height) {
+      return null;
+    }
+    return Math.min(tile.width / embed.width, tile.height / embed.height);
+  });
   protected readonly failed = signal(false);
   protected readonly url = computed(() =>
     (this.broadcast() ? PLATFORMS.xBroadcast : PLATFORMS.x).url(this.id()),
@@ -90,6 +117,10 @@ export class XEmbed {
     afterNextRender(async () => {
       try {
         await loadScript(SCRIPT);
+        // The script loads before it has finished setting up; earlier calls can be ignored.
+        await new Promise<void>((resolve) =>
+          window.twttr?.ready ? window.twttr.ready(resolve) : resolve(),
+        );
         if (destroyRef.destroyed) {
           return;
         }
