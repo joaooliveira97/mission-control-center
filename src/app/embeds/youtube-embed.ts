@@ -16,7 +16,6 @@ import { hostSize } from '../element-size';
   imports: [YouTubePlayer],
   template: `
     <youtube-player
-      class="fill"
       [videoId]="id()"
       [playerVars]="playerVars()"
       [disablePlaceholder]="true"
@@ -25,7 +24,18 @@ import { hostSize } from '../element-size';
       (ready)="ready.set(true)"
     />
   `,
-  styleUrl: './embed.css',
+  // The player is sized in pixels from this element (see size). Percentage sizes don't work:
+  // the iframe sits inside wrapper divs with no height, so it fell back to 150px.
+  styles: `
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    youtube-player ::ng-deep iframe {
+      display: block;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YouTubeEmbed {
