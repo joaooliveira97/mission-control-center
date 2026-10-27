@@ -11,6 +11,14 @@ export interface Size {
  */
 export function hostSize(): Signal<Size | null> {
   const host = inject<ElementRef<HTMLElement>>(ElementRef);
+  return elementSize(() => host.nativeElement);
+}
+
+/**
+ * Tracks the layout size of an element of the current component, read after the first render.
+ * Must be called in an injection context.
+ */
+export function elementSize(element: () => HTMLElement): Signal<Size | null> {
   const destroyRef = inject(DestroyRef);
   const size = signal<Size | null>(null);
 
@@ -19,7 +27,7 @@ export function hostSize(): Signal<Size | null> {
       const { width, height } = entry.contentRect;
       size.set({ width: Math.floor(width), height: Math.floor(height) });
     });
-    observer.observe(host.nativeElement);
+    observer.observe(element());
     destroyRef.onDestroy(() => observer.disconnect());
   });
 
