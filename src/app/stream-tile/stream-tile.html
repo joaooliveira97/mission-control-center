@@ -15,6 +15,9 @@
   @case ('x') {
     <app-x-embed [id]="source.id" />
   }
+  @case ('xBroadcast') {
+    <app-x-embed [id]="source.id" [broadcast]="true" />
+  }
 }
 
 <span class="badge" [attr.data-platform]="source.platform">{{ platform().label }}</span>

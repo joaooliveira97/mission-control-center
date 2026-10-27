@@ -1,8 +1,8 @@
-export type Platform = 'youtube' | 'twitch' | 'kick' | 'facebook' | 'x';
+export type Platform = 'youtube' | 'twitch' | 'kick' | 'facebook' | 'x' | 'xBroadcast';
 
 export interface Source {
   platform: Platform;
-  /** YouTube video id, Twitch/Kick channel, Facebook video id or X post id. */
+  /** YouTube video id, Twitch/Kick channel, Facebook video id, X post or broadcast id. */
   id: string;
 }
 
@@ -51,6 +51,13 @@ export const PLATFORMS: Record<Platform, PlatformInfo> = {
     hasAudio: false,
     idPattern: /^\d{5,25}$/,
     url: (id) => `https://x.com/i/status/${id}`,
+  },
+  xBroadcast: {
+    label: 'X',
+    prefix: 'xb',
+    hasAudio: false,
+    idPattern: /^[A-Za-z0-9]{8,20}$/,
+    url: (id) => `https://x.com/i/broadcasts/${id}`,
   },
 };
 
@@ -137,15 +144,19 @@ function facebook(url: URL): Source | null {
 }
 
 function x(url: URL): Source | null {
-  // /{user}/status/{id} and /i/status/{id}
   const segments = url.pathname.split('/').filter(Boolean);
+  // /i/broadcasts/{id}
+  if (segments[0] === 'i' && segments[1] === 'broadcasts') {
+    return source('xBroadcast', segments[2]);
+  }
+  // /{user}/status/{id} and /i/status/{id}
   const marker = segments.indexOf('status');
   return marker === -1 ? null : source('x', segments[marker + 1]);
 }
 
 /**
  * Turns anything a user is likely to paste into a source: a YouTube id or link,
- * a Twitch or Kick channel link, a Facebook video link or an X post link.
+ * a Twitch or Kick channel link, a Facebook video link, or an X post or broadcast link.
  */
 export function parseSource(input: string): Source | null {
   const value = input.trim();
@@ -181,11 +192,7 @@ export function unsupportedHint(input: string): string | null {
   if (!url) {
     return null;
   }
-  const host = hostOf(url);
-  if ((host === 'x.com' || host === 'twitter.com') && url.pathname.startsWith('/i/broadcasts/')) {
-    return 'O X não deixa incorporar links de transmissão. Usa o link do post que tem o direto (…/status/…).';
-  }
-  if (host === 'fb.watch') {
+  if (hostOf(url) === 'fb.watch') {
     return 'Abre o link fb.watch no browser e cola aqui o endereço completo do vídeo.';
   }
   return null;
