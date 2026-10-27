@@ -4,7 +4,7 @@
 
 <h1 align="center">Mission Control Center</h1>
 
-[Abrir online](https://joaooliveira97.github.io/mission-control-center/)
+[Abrir online](https://missioncontrol.jfoliveira.com/)
 
 Um centro de controlo para ver vários diretos do YouTube ao mesmo tempo, numa só grelha. Nasceu para acompanhar os lançamentos da Starship com todas as câmaras abertas.
 
@@ -39,4 +39,4 @@ Feito com Angular 22 (componentes standalone, signals, sem zone.js) e `@angular/
 
 ## Publicação
 
-Cada push para `main` corre os testes e publica no GitHub Pages através do workflow em `.github/workflows/deploy.yml`.
+Cada push para `main` corre os testes e publica no GitHub Pages através do workflow em `.github/workflows/deploy.yml`. O build usa caminhos relativos (`--base-href ./`), por isso funciona tanto no domínio próprio como em `joaooliveira97.github.io/mission-control-center/`.
