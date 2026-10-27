@@ -24,14 +24,21 @@ declare global {
           element: HTMLElement,
           options: Record<string, unknown>,
         ): Promise<HTMLElement | undefined>;
+        /** The video-only embed. X no longer documents it, so it may not exist. */
+        createVideo?(
+          id: string,
+          element: HTMLElement,
+          options: Record<string, unknown>,
+        ): Promise<HTMLElement | undefined>;
       };
     };
   }
 }
 
 /**
- * X has no embeddable video player, so this shows the whole post. Videos and
- * live broadcasts inside it play when X allows it; otherwise there's a link to X.
+ * X has no documented video-only embed. This tries the old video embed first and
+ * otherwise shows the whole post, whose video plays inside it when X allows it.
+ * If neither loads, there's a link to X.
  */
 @Component({
   selector: 'app-x-embed',
@@ -85,16 +92,20 @@ export class XEmbed {
         if (destroyRef.destroyed) {
           return;
         }
-        const post = await window.twttr!.widgets.createTweet(
-          this.id(),
-          this.target().nativeElement,
-          {
-            theme: 'dark',
-            dnt: true,
-            align: 'center',
-          },
-        );
-        this.failed.set(!post);
+        const widgets = window.twttr!.widgets;
+        const element = this.target().nativeElement;
+        const options = { theme: 'dark', dnt: true, align: 'center' };
+        // Prefer the video on its own; fall back to the whole post, without the thread above it.
+        const video = await widgets
+          .createVideo?.(this.id(), element, options)
+          .catch(() => undefined);
+        if (!video) {
+          element.replaceChildren();
+        }
+        const embed =
+          video ??
+          (await widgets.createTweet(this.id(), element, { ...options, conversation: 'none' }));
+        this.failed.set(!embed);
       } catch {
         this.failed.set(true);
       }
