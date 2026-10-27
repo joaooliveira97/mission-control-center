@@ -3,21 +3,22 @@ import {
   Component,
   ElementRef,
   computed,
-  effect,
   inject,
   input,
   output,
-  signal,
-  untracked,
-  viewChild,
 } from '@angular/core';
-import { YouTubePlayer } from '@angular/youtube-player';
+import { FacebookEmbed } from '../embeds/facebook-embed';
+import { KickEmbed } from '../embeds/kick-embed';
+import { TwitchEmbed } from '../embeds/twitch-embed';
+import { XEmbed } from '../embeds/x-embed';
+import { YouTubeEmbed } from '../embeds/youtube-embed';
 import { Icon } from '../icon';
+import { PLATFORMS } from '../sources';
 import { Stream } from '../streams.store';
 
 @Component({
   selector: 'app-stream-tile',
-  imports: [YouTubePlayer, Icon],
+  imports: [Icon, YouTubeEmbed, TwitchEmbed, KickEmbed, FacebookEmbed, XEmbed],
   templateUrl: './stream-tile.html',
   styleUrl: './stream-tile.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,36 +36,9 @@ export class StreamTile {
   readonly removed = output();
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly player = viewChild.required(YouTubePlayer);
-  private readonly ready = signal(false);
 
-  // Only read once: changing playerVars would recreate the iframe.
-  protected readonly playerVars = computed<YT.PlayerVars>(() => ({
-    autoplay: 1,
-    playsinline: 1,
-    rel: 0,
-    mute: untracked(() => this.stream().muted) ? 1 : 0,
-  }));
-
-  constructor() {
-    effect(() => {
-      const muted = this.stream().muted;
-      if (!this.ready()) {
-        return;
-      }
-      const player = this.player();
-      if (muted) {
-        player.mute();
-      } else {
-        player.unMute();
-        player.playVideo();
-      }
-    });
-  }
-
-  protected onReady() {
-    this.ready.set(true);
-  }
+  protected readonly platform = computed(() => PLATFORMS[this.stream().source.platform]);
+  protected readonly url = computed(() => this.platform().url(this.stream().source.id));
 
   protected fullscreen() {
     this.host.nativeElement.requestFullscreen?.();

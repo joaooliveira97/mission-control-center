@@ -1,27 +1,46 @@
-<youtube-player
-  [videoId]="stream().id"
-  [playerVars]="playerVars()"
-  [disablePlaceholder]="true"
-  (ready)="onReady()"
-/>
+@let source = stream().source;
+@switch (source.platform) {
+  @case ('youtube') {
+    <app-youtube-embed [id]="source.id" [muted]="stream().muted" />
+  }
+  @case ('twitch') {
+    <app-twitch-embed [id]="source.id" [muted]="stream().muted" />
+  }
+  @case ('kick') {
+    <app-kick-embed [id]="source.id" [muted]="stream().muted" />
+  }
+  @case ('facebook') {
+    <app-facebook-embed [id]="source.id" [muted]="stream().muted" />
+  }
+  @case ('x') {
+    <app-x-embed [id]="source.id" />
+  }
+}
+
+<span class="badge" [attr.data-platform]="source.platform">{{ platform().label }}</span>
 
 <div class="controls" role="toolbar" aria-label="Controlos do vídeo">
-  <button
-    type="button"
-    (click)="muteToggled.emit()"
-    [attr.aria-pressed]="!stream().muted"
-    [title]="stream().muted ? 'Ligar som' : 'Silenciar'"
-  >
-    <app-icon [name]="stream().muted ? 'volumeOff' : 'volumeOn'" />
-  </button>
-  <button type="button" (click)="soloed.emit()" title="Ouvir só este">
-    <app-icon name="headset" />
-  </button>
+  @if (platform().hasAudio) {
+    <button
+      type="button"
+      (click)="muteToggled.emit()"
+      [attr.aria-pressed]="!stream().muted"
+      [title]="stream().muted ? 'Ligar som' : 'Silenciar'"
+    >
+      <app-icon [name]="stream().muted ? 'volumeOff' : 'volumeOn'" />
+    </button>
+    <button type="button" (click)="soloed.emit()" title="Ouvir só este">
+      <app-icon name="headset" />
+    </button>
+  }
   @if (canPromote()) {
     <button type="button" (click)="promoted.emit()" title="Pôr em destaque">
       <app-icon name="star" />
     </button>
   }
+  <a [href]="url()" target="_blank" rel="noopener" [title]="'Abrir no ' + platform().label">
+    <app-icon name="openInNew" />
+  </a>
   <button type="button" (click)="fullscreen()" title="Ecrã inteiro">
     <app-icon name="fullscreen" />
   </button>

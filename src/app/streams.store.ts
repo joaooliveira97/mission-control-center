@@ -1,17 +1,21 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
+import { PLATFORMS, Source, parseKey, sourceKey } from './sources';
 
 export type Layout = 'grid' | 'focus' | 'stage';
 
 export const LAYOUTS: readonly Layout[] = ['grid', 'focus', 'stage'];
 
 export interface Stream {
-  id: string;
+  /** See sourceKey(): unique per stream. */
+  key: string;
+  source: Source;
   muted: boolean;
   /** Insertion order. The DOM keeps this order so iframes never move and reload. */
   seq: number;
 }
 
 interface SavedState {
+  /** Source keys, in display order. */
   ids: string[];
   unmuted: string[];
   layout: Layout;
@@ -50,18 +54,21 @@ export class StreamsStore {
   }
 
   /** Returns false when the stream is already on screen. */
-  add(id: string): boolean {
-    if (this.streams().some((s) => s.id === id)) {
+  add(source: Source): boolean {
+    const key = sourceKey(source);
+    if (this.streams().some((s) => s.key === key)) {
       return false;
     }
-    // Only the first stream starts with sound, so a full wall doesn't talk over itself.
-    const muted = this.count() > 0;
-    this.streams.update((list) => [...list, { id, muted, seq: this.seq++ }]);
+    // Only the first stream with sound starts unmuted, so a full wall doesn't talk over itself.
+    const muted =
+      !PLATFORMS[source.platform].hasAudio ||
+      this.streams().some((s) => PLATFORMS[s.source.platform].hasAudio);
+    this.streams.update((list) => [...list, { key, source, muted, seq: this.seq++ }]);
     return true;
   }
 
-  remove(id: string) {
-    this.streams.update((list) => list.filter((s) => s.id !== id));
+  remove(key: string) {
+    this.streams.update((list) => list.filter((s) => s.key !== key));
   }
 
   clear() {
@@ -69,20 +76,20 @@ export class StreamsStore {
   }
 
   /** Moves a stream to the main slot. */
-  promote(id: string) {
+  promote(key: string) {
     this.streams.update((list) => {
-      const stream = list.find((s) => s.id === id);
+      const stream = list.find((s) => s.key === key);
       return stream ? [stream, ...list.filter((s) => s !== stream)] : list;
     });
   }
 
-  toggleMute(id: string) {
-    this.streams.update((list) => list.map((s) => (s.id === id ? { ...s, muted: !s.muted } : s)));
+  toggleMute(key: string) {
+    this.streams.update((list) => list.map((s) => (s.key === key ? { ...s, muted: !s.muted } : s)));
   }
 
   /** Unmutes one stream and mutes all the others. */
-  solo(id: string) {
-    this.streams.update((list) => list.map((s) => ({ ...s, muted: s.id !== id })));
+  solo(key: string) {
+    this.streams.update((list) => list.map((s) => ({ ...s, muted: s.key !== key })));
   }
 
   muteAll() {
@@ -92,7 +99,7 @@ export class StreamsStore {
   shareUrl(): string {
     const params = new URLSearchParams({
       v: this.streams()
-        .map((s) => s.id)
+        .map((s) => s.key)
         .join(','),
     });
     if (this.layout() !== 'grid') {
@@ -104,16 +111,20 @@ export class StreamsStore {
   private snapshot(): SavedState {
     const streams = this.streams();
     return {
-      ids: streams.map((s) => s.id),
-      unmuted: streams.filter((s) => !s.muted).map((s) => s.id),
+      ids: streams.map((s) => s.key),
+      unmuted: streams.filter((s) => !s.muted).map((s) => s.key),
       layout: this.layout(),
     };
   }
 
   private restore(state: SavedState) {
-    const ids = [...new Set(state.ids)];
+    const keys = [...new Set(state.ids)];
     this.streams.set(
-      ids.map((id) => ({ id, muted: !state.unmuted.includes(id), seq: this.seq++ })),
+      keys.map((key) => {
+        const source = parseKey(key)!;
+        const muted = !PLATFORMS[source.platform].hasAudio || !state.unmuted.includes(key);
+        return { key, source, muted, seq: this.seq++ };
+      }),
     );
     this.layout.set(state.layout);
   }
@@ -123,13 +134,17 @@ function asLayout(value: unknown): Layout {
   return LAYOUTS.includes(value as Layout) ? (value as Layout) : 'grid';
 }
 
-function isId(value: unknown): value is string {
-  return typeof value === 'string' && /^[\w-]{11}$/.test(value);
+function isKey(value: unknown): value is string {
+  return typeof value === 'string' && parseKey(value) !== null;
+}
+
+function isYouTubeId(value: unknown): value is string {
+  return typeof value === 'string' && PLATFORMS.youtube.idPattern.test(value);
 }
 
 function readHash(): SavedState | null {
   const params = new URLSearchParams(location.hash.slice(1));
-  const ids = (params.get('v') ?? '').split(',').filter(isId);
+  const ids = (params.get('v') ?? '').split(',').filter(isKey);
   if (ids.length === 0) {
     return null;
   }
@@ -151,8 +166,8 @@ function readStorage(): SavedState | null {
   }
   const unmuted = Array.isArray(saved.unmuted) ? saved.unmuted : [];
   return {
-    ids: saved.ids.filter(isId),
-    unmuted: unmuted.filter(isId),
+    ids: saved.ids.filter(isKey),
+    unmuted: unmuted.filter(isKey),
     layout: asLayout(saved.layout),
   };
 }
@@ -160,13 +175,13 @@ function readStorage(): SavedState | null {
 /** Picks up videos saved by the original Angular 11 version of the app. */
 function readLegacyStorage(): SavedState | null {
   const freeGrid = readJson(LEGACY_KEYS.freeGrid);
-  if (Array.isArray(freeGrid) && freeGrid.some(isId)) {
-    const ids = freeGrid.filter(isId);
+  if (Array.isArray(freeGrid) && freeGrid.some(isYouTubeId)) {
+    const ids = freeGrid.filter(isYouTubeId);
     return { ids, unmuted: ids.slice(0, 1), layout: 'grid' };
   }
   const twoThree = readJson(LEGACY_KEYS.twoThree);
-  if (Array.isArray(twoThree) && twoThree.some(isId)) {
-    const ids = twoThree.filter(isId);
+  if (Array.isArray(twoThree) && twoThree.some(isYouTubeId)) {
+    const ids = twoThree.filter(isYouTubeId);
     return { ids, unmuted: ids.slice(0, 1), layout: 'stage' };
   }
   return null;

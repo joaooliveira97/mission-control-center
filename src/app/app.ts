@@ -13,7 +13,7 @@ import { Icon } from './icon';
 import { planLayout } from './layout';
 import { StreamTile } from './stream-tile/stream-tile';
 import { Layout, StreamsStore } from './streams.store';
-import { parseYouTubeId } from './youtube-id';
+import { parseSource, unsupportedHint } from './sources';
 
 /** Below this width the focus and stage layouts get too cramped, so the grid is used. */
 const NARROW_WIDTH = 640;
@@ -49,7 +49,7 @@ export class App {
 
   /** Display position of each stream, keyed by id. */
   protected readonly positions = computed(
-    () => new Map(this.store.streams().map((stream, index) => [stream.id, index])),
+    () => new Map(this.store.streams().map((stream, index) => [stream.key, index])),
   );
 
   constructor() {
@@ -71,15 +71,18 @@ export class App {
   protected add(input: HTMLInputElement) {
     const value = input.value.trim();
     if (!value) {
-      this.error.set('Cola um link ou ID de um vídeo do YouTube.');
+      this.error.set('Cola o link de um direto ou vídeo.');
       return;
     }
-    const id = parseYouTubeId(value);
-    if (!id) {
-      this.error.set('Não reconheço esse link do YouTube.');
+    const source = parseSource(value);
+    if (!source) {
+      this.error.set(
+        unsupportedHint(value) ??
+          'Não reconheço esse link. Usa um link do YouTube, Twitch, Kick, Facebook ou X.',
+      );
       return;
     }
-    if (!this.store.add(id)) {
+    if (!this.store.add(source)) {
       this.error.set('Esse vídeo já está no ecrã.');
       return;
     }

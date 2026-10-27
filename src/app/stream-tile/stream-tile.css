@@ -13,11 +13,37 @@
   outline: 2px solid var(--accent);
 }
 
-youtube-player,
-youtube-player ::ng-deep iframe {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
+/* The platform name, shown with the controls so mixed walls stay readable. */
+.badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgb(8 12 20 / 80%);
+  border-left: 3px solid var(--platform, var(--accent));
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.badge[data-platform='youtube'] {
+  --platform: #ff0033;
+}
+.badge[data-platform='twitch'] {
+  --platform: #9146ff;
+}
+.badge[data-platform='kick'] {
+  --platform: #53fc18;
+}
+.badge[data-platform='facebook'] {
+  --platform: #0866ff;
+}
+.badge[data-platform='x'] {
+  --platform: #e7e9ea;
 }
 
 .controls {
@@ -37,6 +63,7 @@ youtube-player ::ng-deep iframe {
     transform 150ms ease;
 }
 
+:host(:hover) .badge,
 :host(:hover) .controls,
 .controls:focus-within {
   opacity: 1;
@@ -45,13 +72,15 @@ youtube-player ::ng-deep iframe {
 
 /* Touch screens have no hover, so keep the controls visible there. */
 @media (hover: none) {
+  .badge,
   .controls {
     opacity: 1;
     transform: none;
   }
 }
 
-button {
+button,
+a {
   display: grid;
   place-items: center;
   width: 32px;
@@ -64,7 +93,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:hover,
+a:hover {
   background: rgb(255 255 255 / 12%);
 }
 

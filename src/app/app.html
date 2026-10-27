@@ -10,8 +10,8 @@
       #url
       type="text"
       inputmode="url"
-      placeholder="Link de um direto do YouTube"
-      aria-label="Link de um vídeo do YouTube"
+      placeholder="Link de um direto (YouTube, Twitch, Kick, Facebook, X)"
+      aria-label="Link de um direto ou vídeo"
       [attr.aria-invalid]="error() ? true : null"
       aria-describedby="add-error"
       (input)="error.set('')"
@@ -76,26 +76,26 @@
   [style.grid-template-columns]="plan().columns"
   [style.grid-template-rows]="plan().rows"
 >
-  @for (stream of store.domOrder(); track stream.id) {
-    @let position = positions().get(stream.id) ?? 0;
+  @for (stream of store.domOrder(); track stream.key) {
+    @let position = positions().get(stream.key) ?? 0;
     <app-stream-tile
       [stream]="stream"
       [canPromote]="position > 0"
       [style.order]="position"
       [style.grid-column]="plan().cells[position].column"
       [style.grid-row]="plan().cells[position].row"
-      (muteToggled)="store.toggleMute(stream.id)"
-      (soloed)="store.solo(stream.id)"
-      (promoted)="store.promote(stream.id)"
-      (removed)="store.remove(stream.id)"
+      (muteToggled)="store.toggleMute(stream.key)"
+      (soloed)="store.solo(stream.key)"
+      (promoted)="store.promote(stream.key)"
+      (removed)="store.remove(stream.key)"
     />
   } @empty {
     <section class="empty">
       <h2>Nenhum direto no ecrã</h2>
       <p>
-        Cola acima o link de um vídeo ou direto do YouTube. Funciona com links
-        <code>youtube.com/watch</code>, <code>/live/</code>, <code>/shorts/</code> e
-        <code>youtu.be</code>.
+        Cola acima o link de um direto ou vídeo do YouTube, Twitch, Kick, Facebook ou de um post do
+        X. No YouTube funcionam links <code>watch</code>, <code>/live/</code>,
+        <code>/shorts/</code> e <code>youtu.be</code>.
       </p>
       <p>Os vídeos ficam guardados neste browser e podes partilhar o ecrã inteiro com um link.</p>
     </section>
