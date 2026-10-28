@@ -18,6 +18,9 @@ import { parseSource, unsupportedHint } from './sources';
 /** Below this width the focus and stage layouts get too cramped, so the grid is used. */
 const NARROW_WIDTH = 640;
 
+/** New issue form on GitHub, using the bug report template in .github/ISSUE_TEMPLATE. */
+const NEW_ISSUE_URL = 'https://github.com/joaooliveira97/mission-control-center/issues/new';
+
 @Component({
   selector: 'app-root',
   imports: [StreamTile, Icon],
@@ -55,6 +58,18 @@ export class App {
   protected readonly positions = computed(
     () => new Map(this.store.streams().map((stream, index) => [stream.key, index])),
   );
+
+  /** Opens the bug report with the current screen and browser already filled in. */
+  protected readonly reportUrl = computed(() => {
+    const params = new URLSearchParams({
+      template: 'bug_report.yml',
+      browser: navigator.userAgent,
+    });
+    if (this.store.count() > 0) {
+      params.set('link', this.store.shareUrl());
+    }
+    return `${NEW_ISSUE_URL}?${params}`;
+  });
 
   constructor() {
     const destroyRef = inject(DestroyRef);

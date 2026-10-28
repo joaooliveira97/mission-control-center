@@ -1,0 +1,29 @@
+name: Reportar um erro
+description: Algo não funciona como devia no Mission Control.
+labels: [bug]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que aconteceu?
+      description: Descreve o erro e o que esperavas que acontecesse.
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Como reproduzir
+      description: Os passos que levam ao erro, se souberes.
+      placeholder: |
+        1. Colei o link ...
+        2. Carreguei em ...
+  - type: input
+    id: link
+    attributes:
+      label: Link do ecrã
+      description: O link de partilha com os vídeos que tinhas abertos. É preenchido sozinho quando reportas pelo site.
+  - type: input
+    id: browser
+    attributes:
+      label: Browser e sistema
+      description: É preenchido sozinho quando reportas pelo site.
