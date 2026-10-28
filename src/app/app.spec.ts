@@ -24,4 +24,15 @@ describe('App', () => {
     await fixture.whenStable();
     expect(compiled.querySelector('.error')?.textContent).toContain('Não reconheço');
   });
+
+  it('links to a prefilled bug report on GitHub', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const link = compiled.querySelector<HTMLAnchorElement>('a[title="Reportar um erro"]')!;
+    const url = new URL(link.href);
+    expect(url.pathname).toBe('/joaooliveira97/mission-control-center/issues/new');
+    expect(url.searchParams.get('template')).toBe('bug_report.yml');
+    expect(url.searchParams.get('browser')).toBe(navigator.userAgent);
+  });
 });

@@ -110,7 +110,8 @@ input[aria-invalid='true'] {
   display: none;
 }
 
-button {
+button,
+a.button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -124,7 +125,8 @@ button {
   cursor: pointer;
 }
 
-button:hover:not(:disabled) {
+button:hover:not(:disabled),
+a.button:hover {
   border-color: var(--accent);
 }
 
@@ -140,7 +142,8 @@ button.primary {
   font-weight: 600;
 }
 
-button.icon {
+button.icon,
+a.button.icon {
   justify-content: center;
   width: 36px;
   padding: 0;
