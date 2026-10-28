@@ -38,6 +38,10 @@ export class App {
   protected readonly toast = signal('');
   protected readonly utc = signal(formatUtc(new Date()));
 
+  /** Key of the stream being dragged, and of the tile under the pointer. */
+  protected readonly dragging = signal<string | null>(null);
+  protected readonly dropTarget = signal<string | null>(null);
+
   private readonly wall = viewChild.required<ElementRef<HTMLElement>>('wall');
   private readonly wallSize = signal({ width: 1920, height: 1080 });
 
@@ -90,6 +94,39 @@ export class App {
     input.value = '';
   }
 
+  /**
+   * Drags a tile by its handle. The pointer is captured so the iframes under it can't swallow the
+   * events, and the drop only changes the display order, so every stream keeps playing.
+   */
+  protected startDrag(key: string, event: PointerEvent) {
+    if (event.button !== 0 || this.dragging()) {
+      return;
+    }
+    event.preventDefault();
+    (event.currentTarget as Element | null)?.setPointerCapture?.(event.pointerId);
+    this.dragging.set(key);
+
+    const move = (e: PointerEvent) => {
+      const target = tileAt(e.clientX, e.clientY);
+      this.dropTarget.set(target === key ? null : target);
+    };
+    const end = (e: PointerEvent) => {
+      removeEventListener('pointermove', move);
+      removeEventListener('pointerup', end);
+      removeEventListener('pointercancel', end);
+      const target = this.dropTarget();
+      const index = target ? this.positions().get(target) : undefined;
+      if (e.type === 'pointerup' && index !== undefined) {
+        this.store.move(key, index);
+      }
+      this.dragging.set(null);
+      this.dropTarget.set(null);
+    };
+    addEventListener('pointermove', move);
+    addEventListener('pointerup', end);
+    addEventListener('pointercancel', end);
+  }
+
   protected async share() {
     const url = this.store.shareUrl();
     try {
@@ -118,6 +155,12 @@ export class App {
     this.toast.set(message);
     setTimeout(() => this.toast.set(''), 2500);
   }
+}
+
+/** Key of the stream tile at a point on screen, if any. */
+function tileAt(x: number, y: number): string | null {
+  const tile = document.elementFromPoint(x, y)?.closest<HTMLElement>('app-stream-tile');
+  return tile?.dataset['key'] ?? null;
 }
 
 function formatUtc(date: Date): string {

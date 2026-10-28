@@ -20,6 +20,7 @@ Um centro de controlo para ver vários diretos do YouTube ao mesmo tempo, numa s
   - **Destaque**: um vídeo grande e os restantes numa coluna ao lado.
   - **Palco**: dois vídeos grandes em cima e os restantes em baixo (o antigo "2 + 3").
 - Só o primeiro vídeo começa com som. Cada vídeo tem botões para ligar/desligar o som, ouvir só esse, pô-lo em destaque, abri-lo no site original, pô-lo em ecrã inteiro ou removê-lo. No Kick, mudar o som recarrega o player, porque o Kick não tem API para isso.
+- Para mudar a ordem dos vídeos, arrasta-os pela pega (⠿) nos controlos, ou foca a pega e usa as setas. Os diretos continuam a tocar sem recarregar, e a nova ordem fica guardada e vai no link de partilha.
 - Relógio UTC no topo, útil para seguir as contagens decrescentes.
 - Os vídeos ficam guardados no browser automaticamente (incluindo os que tinham sido guardados na versão antiga).
 - O botão de partilha copia um link com todos os vídeos e a disposição, por exemplo `…/#v=ID1,ID2,ID3&layout=focus`.

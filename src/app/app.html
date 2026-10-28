@@ -82,6 +82,10 @@
     <app-stream-tile
       [stream]="stream"
       [canPromote]="position > 0"
+      [canMove]="store.count() > 1"
+      [attr.data-key]="stream.key"
+      [class.dragging]="dragging() === stream.key"
+      [class.drop-target]="dropTarget() === stream.key"
       [style.order]="position"
       [style.grid-column]="plan().cells[position].column"
       [style.grid-row]="plan().cells[position].row"
@@ -89,6 +93,8 @@
       (soloed)="store.solo(stream.key)"
       (promoted)="store.promote(stream.key)"
       (removed)="store.remove(stream.key)"
+      (dragStarted)="startDrag(stream.key, $event)"
+      (nudged)="store.move(stream.key, position + $event)"
     />
   } @empty {
     <section class="empty">

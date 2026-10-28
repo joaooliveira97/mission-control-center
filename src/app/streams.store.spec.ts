@@ -50,6 +50,33 @@ describe('StreamsStore', () => {
     expect(store.domOrder().map((s) => s.key)).toEqual([A, B, C]);
   });
 
+  it('moves a stream to another position without changing the DOM order', () => {
+    const store = createStore();
+    [A, B, C].forEach((id) => store.add(yt(id)));
+    store.move(A, 2);
+    expect(store.streams().map((s) => s.key)).toEqual([B, C, A]);
+    store.move(A, 1);
+    expect(store.streams().map((s) => s.key)).toEqual([B, A, C]);
+    store.move(C, -5);
+    expect(store.streams().map((s) => s.key)).toEqual([C, B, A]);
+    expect(store.domOrder().map((s) => s.key)).toEqual([A, B, C]);
+  });
+
+  it('keeps the new order in the share link and on the next visit', () => {
+    const store = createStore();
+    [A, B, C].forEach((id) => store.add(yt(id)));
+    store.move(C, 0);
+    expect(store.shareUrl()).toMatch(new RegExp(`#v=${C}%2C${A}%2C${B}$`));
+    TestBed.tick();
+
+    TestBed.resetTestingModule();
+    expect(
+      createStore()
+        .streams()
+        .map((s) => s.key),
+    ).toEqual([C, A, B]);
+  });
+
   it('restores streams from a shared link', () => {
     history.replaceState(null, '', `/#v=${A},${B},nope&layout=focus`);
     const store = createStore();

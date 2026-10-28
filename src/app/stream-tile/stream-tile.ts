@@ -30,16 +30,30 @@ import { Stream } from '../streams.store';
 export class StreamTile {
   readonly stream = input.required<Stream>();
   readonly canPromote = input(false);
+  readonly canMove = input(false);
 
   readonly muteToggled = output();
   readonly soloed = output();
   readonly promoted = output();
   readonly removed = output();
+  /** Pointer pressed on the drag handle. */
+  readonly dragStarted = output<PointerEvent>();
+  /** Arrow key on the drag handle: -1 moves back one position, 1 moves forward. */
+  readonly nudged = output<-1 | 1>();
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly platform = computed(() => PLATFORMS[this.stream().source.platform]);
   protected readonly url = computed(() => this.platform().url(this.stream().source.id));
+
+  protected nudge(event: KeyboardEvent) {
+    const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[event.key] as
+      -1 | 1 | undefined;
+    if (step) {
+      event.preventDefault();
+      this.nudged.emit(step);
+    }
+  }
 
   protected fullscreen() {
     this.host.nativeElement.requestFullscreen?.();
