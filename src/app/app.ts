@@ -9,6 +9,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { t } from './i18n';
 import { Icon } from './icon';
 import { planLayout } from './layout';
 import { StreamTile } from './stream-tile/stream-tile';
@@ -31,11 +32,12 @@ const NEW_ISSUE_URL = 'https://github.com/joaooliveira97/mission-control-center/
 export class App {
   protected readonly store = inject(StreamsStore);
 
-  protected readonly layouts: { value: Layout; label: string; hint: string }[] = [
-    { value: 'grid', label: 'Grelha', hint: 'Todos os vídeos com o mesmo tamanho' },
-    { value: 'focus', label: 'Destaque', hint: 'Um vídeo grande e os outros ao lado' },
-    { value: 'stage', label: 'Palco', hint: 'Dois vídeos grandes em cima e os restantes em baixo' },
-  ];
+  protected readonly t = t;
+
+  protected readonly layouts = (['grid', 'focus', 'stage'] as Layout[]).map((value) => ({
+    value,
+    ...t.layouts[value],
+  }));
 
   protected readonly error = signal('');
   protected readonly toast = signal('');
@@ -90,19 +92,16 @@ export class App {
   protected add(input: HTMLInputElement) {
     const value = input.value.trim();
     if (!value) {
-      this.error.set('Cola o link de um direto ou vídeo.');
+      this.error.set(t.errorEmpty);
       return;
     }
     const source = parseSource(value);
     if (!source) {
-      this.error.set(
-        unsupportedHint(value) ??
-          'Não reconheço esse link. Usa um link do YouTube, Twitch, Kick, Facebook ou X.',
-      );
+      this.error.set(unsupportedHint(value) ?? t.errorUnknown);
       return;
     }
     if (!this.store.add(source)) {
-      this.error.set('Esse vídeo já está no ecrã.');
+      this.error.set(t.errorDuplicate);
       return;
     }
     this.error.set('');
@@ -146,14 +145,14 @@ export class App {
     const url = this.store.shareUrl();
     try {
       await navigator.clipboard.writeText(url);
-      this.flash('Link copiado. Quem o abrir vê estes vídeos.');
+      this.flash(t.shareCopied);
     } catch {
-      prompt('Copia este link:', url);
+      prompt(t.sharePrompt, url);
     }
   }
 
   protected clear() {
-    if (confirm('Remover todos os vídeos?')) {
+    if (confirm(t.clearConfirm)) {
       this.store.clear();
     }
   }

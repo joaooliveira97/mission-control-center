@@ -22,13 +22,13 @@
 
 <span class="badge" [attr.data-platform]="source.platform">{{ platform().label }}</span>
 
-<div class="controls" role="toolbar" aria-label="Controlos do vídeo">
+<div class="controls" role="toolbar" [attr.aria-label]="t.tileControls">
   @if (canMove()) {
     <button
       type="button"
       class="grip"
-      title="Arrastar para mudar de posição (ou usa as setas)"
-      aria-label="Mudar de posição"
+      [title]="t.dragHint"
+      [attr.aria-label]="t.dragLabel"
       (pointerdown)="dragStarted.emit($event)"
       (keydown)="nudge($event)"
     >
@@ -40,26 +40,26 @@
       type="button"
       (click)="muteToggled.emit()"
       [attr.aria-pressed]="!stream().muted"
-      [title]="stream().muted ? 'Ligar som' : 'Silenciar'"
+      [title]="stream().muted ? t.unmute : t.mute"
     >
       <app-icon [name]="stream().muted ? 'volumeOff' : 'volumeOn'" />
     </button>
-    <button type="button" (click)="soloed.emit()" title="Ouvir só este">
+    <button type="button" (click)="soloed.emit()" [title]="t.solo">
       <app-icon name="headset" />
     </button>
   }
   @if (canPromote()) {
-    <button type="button" (click)="promoted.emit()" title="Pôr em destaque">
+    <button type="button" (click)="promoted.emit()" [title]="t.promote">
       <app-icon name="star" />
     </button>
   }
-  <a [href]="url()" target="_blank" rel="noopener" [title]="'Abrir no ' + platform().label">
+  <a [href]="url()" target="_blank" rel="noopener" [title]="t.openIn(platform().label)">
     <app-icon name="openInNew" />
   </a>
-  <button type="button" (click)="fullscreen()" title="Ecrã inteiro">
+  <button type="button" (click)="fullscreen()" [title]="t.fullscreen">
     <app-icon name="fullscreen" />
   </button>
-  <button type="button" class="danger" (click)="removed.emit()" title="Remover">
+  <button type="button" class="danger" (click)="removed.emit()" [title]="t.remove">
     <app-icon name="close" />
   </button>
 </div>
