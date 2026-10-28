@@ -3,7 +3,7 @@
     <img class="logo" src="favicon.svg" alt="" width="28" height="28" />
     <span class="live-dot" [class.on]="store.count() > 0" aria-hidden="true"></span>
     <h1>Mission Control</h1>
-    <time class="clock" title="Hora UTC">{{ utc() }} UTC</time>
+    <time class="clock" [title]="t.utcTitle">{{ utc() }} UTC</time>
   </div>
 
   <form class="add" (submit)="$event.preventDefault(); add(url)">
@@ -11,21 +11,21 @@
       #url
       type="text"
       inputmode="url"
-      placeholder="Link de um direto (YouTube, Twitch, Kick, Facebook, X)"
-      aria-label="Link de um direto ou vídeo"
+      [placeholder]="t.addPlaceholder"
+      [attr.aria-label]="t.addLabel"
       [attr.aria-invalid]="error() ? true : null"
       aria-describedby="add-error"
       (input)="error.set('')"
     />
     <button type="submit" class="primary">
       <app-icon name="add" />
-      <span>Adicionar</span>
+      <span>{{ t.add }}</span>
     </button>
     <p id="add-error" class="error" role="alert">{{ error() }}</p>
   </form>
 
   <div class="tools">
-    <div class="segmented" role="radiogroup" aria-label="Disposição">
+    <div class="segmented" role="radiogroup" [attr.aria-label]="t.layoutGroup">
       @for (layout of layouts; track layout.value) {
         <button
           type="button"
@@ -41,7 +41,7 @@
     <button
       type="button"
       class="icon"
-      title="Silenciar tudo"
+      [title]="t.muteAll"
       [disabled]="store.allMuted()"
       (click)="store.muteAll()"
     >
@@ -50,7 +50,7 @@
     <button
       type="button"
       class="icon"
-      title="Copiar link para partilhar"
+      [title]="t.share"
       [disabled]="store.count() === 0"
       (click)="share()"
     >
@@ -59,19 +59,19 @@
     <button
       type="button"
       class="icon"
-      title="Remover todos"
+      [title]="t.clearAll"
       [disabled]="store.count() === 0"
       (click)="clear()"
     >
       <app-icon name="trash" />
     </button>
-    <button type="button" class="icon" title="Ecrã inteiro" (click)="toggleFullscreen()">
+    <button type="button" class="icon" [title]="t.fullscreen" (click)="toggleFullscreen()">
       <app-icon name="fullscreen" />
     </button>
     <a
       class="button icon"
-      title="Reportar um erro"
-      aria-label="Reportar um erro"
+      [title]="t.reportBug"
+      [attr.aria-label]="t.reportBug"
       target="_blank"
       rel="noopener"
       [href]="reportUrl()"
@@ -109,13 +109,12 @@
   } @empty {
     <section class="empty">
       <img class="empty-logo" src="logo.svg" alt="" width="180" height="180" />
-      <h2>Nenhum direto no ecrã</h2>
+      <h2>{{ t.emptyTitle }}</h2>
       <p>
-        Cola acima o link de um direto ou vídeo do YouTube, Twitch, Kick, Facebook ou de um post do
-        X. No YouTube funcionam links <code>watch</code>, <code>/live/</code>,
-        <code>/shorts/</code> e <code>youtu.be</code>.
+        {{ t.emptyBody }} <code>watch</code>, <code>/live/</code>, <code>/shorts/</code>
+        {{ t.emptyAnd }} <code>youtu.be</code>.
       </p>
-      <p>Os vídeos ficam guardados neste browser e podes partilhar o ecrã inteiro com um link.</p>
+      <p>{{ t.emptySaved }}</p>
     </section>
   }
 </main>
