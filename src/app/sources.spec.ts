@@ -1,4 +1,5 @@
 import { Source, parseKey, parseSource, sourceKey, unsupportedHint } from './sources';
+import { t } from './i18n';
 
 describe('parseSource', () => {
   const yt = 'dQw4w9WgXcQ';
@@ -99,7 +100,7 @@ describe('source keys', () => {
 
 describe('unsupportedHint', () => {
   it('explains fb.watch short links', () => {
-    expect(unsupportedHint('https://fb.watch/abc123/')).toContain('endereço completo');
+    expect(unsupportedHint('https://fb.watch/abc123/')).toBe(t.fbWatchHint);
   });
 
   it('has nothing to say about unrelated links', () => {

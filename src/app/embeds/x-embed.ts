@@ -10,6 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { t } from '../i18n';
 import { PLATFORMS } from '../sources';
 import { loadScript } from './load-script';
 
@@ -42,8 +43,8 @@ declare global {
     <div #target class="post" [hidden]="failed()"></div>
     @if (failed()) {
       <p class="fallback">
-        Não foi possível mostrar este post.
-        <a [href]="url()" target="_blank" rel="noopener">Abrir no X</a>
+        {{ t.postFailed }}
+        <a [href]="url()" target="_blank" rel="noopener">{{ t.openIn('X') }}</a>
       </p>
     }
   `,
@@ -74,6 +75,7 @@ export class XEmbed {
   readonly id = input.required<string>();
 
   private readonly target = viewChild.required<ElementRef<HTMLElement>>('target');
+  protected readonly t = t;
   protected readonly failed = signal(false);
   protected readonly url = computed(() => PLATFORMS.x.url(this.id()));
 

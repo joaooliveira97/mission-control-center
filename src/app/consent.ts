@@ -16,7 +16,7 @@ export interface ProviderInfo {
 export const PROVIDERS: Record<Provider, ProviderInfo> = {
   youtube: {
     label: 'YouTube (Google)',
-    privacyUrl: 'https://policies.google.com/privacy?hl=pt-PT',
+    privacyUrl: 'https://policies.google.com/privacy',
   },
   twitch: { label: 'Twitch (Amazon)', privacyUrl: 'https://www.twitch.tv/p/legal/privacy-notice/' },
   kick: { label: 'Kick', privacyUrl: 'https://kick.com/privacy-policy' },

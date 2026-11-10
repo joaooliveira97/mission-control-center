@@ -14,6 +14,7 @@ import { XBroadcastEmbed } from '../embeds/x-broadcast-embed';
 import { XEmbed } from '../embeds/x-embed';
 import { YouTubeEmbed } from '../embeds/youtube-embed';
 import { ConsentStore, PROVIDERS, providerOf } from '../consent';
+import { t } from '../i18n';
 import { Icon } from '../icon';
 import { PLATFORMS } from '../sources';
 import { Stream } from '../streams.store';
@@ -41,6 +42,8 @@ export class StreamTile {
   readonly dragStarted = output<PointerEvent>();
   /** Arrow key on the drag handle: -1 moves back one position, 1 moves forward. */
   readonly nudged = output<-1 | 1>();
+
+  protected readonly t = t;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
