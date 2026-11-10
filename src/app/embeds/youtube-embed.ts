@@ -19,6 +19,7 @@ import { hostSize } from '../element-size';
       [videoId]="id()"
       [playerVars]="playerVars()"
       [disablePlaceholder]="true"
+      [disableCookies]="true"
       [width]="size()?.width"
       [height]="size()?.height"
       (ready)="ready.set(true)"

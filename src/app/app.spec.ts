@@ -35,4 +35,19 @@ describe('App', () => {
     expect(url.searchParams.get('template')).toBe('bug_report.yml');
     expect(url.searchParams.get('browser')).toBe(navigator.userAgent);
   });
+
+  it('asks before loading a platform, and loads it once allowed', async () => {
+    location.hash = '#v=dQw4w9WgXcQ';
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('app-youtube-embed')).toBeNull();
+    const button = compiled.querySelector<HTMLButtonElement>('app-stream-tile .consent button')!;
+    expect(button.textContent).toContain('YouTube');
+
+    button.click();
+    await fixture.whenStable();
+    expect(compiled.querySelector('.consent')).toBeNull();
+    expect(compiled.querySelector('app-youtube-embed')).not.toBeNull();
+  });
 });

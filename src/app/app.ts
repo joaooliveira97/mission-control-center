@@ -9,6 +9,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { ConsentStore, PROVIDERS } from './consent';
 import { Icon } from './icon';
 import { planLayout } from './layout';
 import { StreamTile } from './stream-tile/stream-tile';
@@ -30,6 +31,12 @@ const NEW_ISSUE_URL = 'https://github.com/joaooliveira97/mission-control-center/
 })
 export class App {
   protected readonly store = inject(StreamsStore);
+  protected readonly consent = inject(ConsentStore);
+
+  /** Names of the platforms the visitor allowed, for the privacy dialog. */
+  protected readonly allowedLabels = computed(() =>
+    [...this.consent.allowed()].map((provider) => PROVIDERS[provider].label).join(', '),
+  );
 
   protected readonly layouts: { value: Layout; label: string; hint: string }[] = [
     { value: 'grid', label: 'Grelha', hint: 'Todos os vídeos com o mesmo tamanho' },

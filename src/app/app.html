@@ -68,6 +68,9 @@
     <button type="button" class="icon" title="Ecrã inteiro" (click)="toggleFullscreen()">
       <app-icon name="fullscreen" />
     </button>
+    <button type="button" class="icon" title="Privacidade" (click)="privacy.showModal()">
+      <app-icon name="privacy" />
+    </button>
     <a
       class="button icon"
       title="Reportar um erro"
@@ -123,3 +126,33 @@
 @if (toast()) {
   <div class="toast" role="status">{{ toast() }}</div>
 }
+
+<dialog #privacy class="privacy" aria-labelledby="privacy-title">
+  <h2 id="privacy-title">Privacidade</h2>
+  <p>
+    O Mission Control não tem contas, publicidade nem estatísticas de visitas, e não envia dados
+    para nenhum servidor próprio. A lista de vídeos, a disposição e as plataformas que autorizaste
+    ficam guardadas só neste browser.
+  </p>
+  <p>
+    Os vídeos são carregados a partir das plataformas (YouTube, Twitch, Kick, Facebook e X), que
+    podem guardar cookies e recolher dados segundo as suas próprias políticas de privacidade. Por
+    isso, cada plataforma só é carregada depois de a autorizares. O YouTube usa o modo de
+    privacidade melhorada (youtube-nocookie.com).
+  </p>
+  <p>
+    O site está alojado no GitHub Pages, que regista o endereço IP dos visitantes por motivos de
+    segurança. O botão de reportar um erro abre o GitHub com o browser e o link do ecrã já
+    preenchidos.
+  </p>
+  <p>
+    <strong>Plataformas autorizadas:</strong>
+    {{ allowedLabels() || 'nenhuma' }}
+  </p>
+  <form method="dialog" class="actions">
+    <button type="button" [disabled]="!allowedLabels()" (click)="consent.revokeAll()">
+      Retirar autorizações
+    </button>
+    <button type="submit" class="primary">Fechar</button>
+  </form>
+</dialog>

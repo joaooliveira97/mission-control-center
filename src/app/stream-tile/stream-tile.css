@@ -91,8 +91,8 @@
   }
 }
 
-button,
-a {
+.controls button,
+.controls a {
   display: grid;
   place-items: center;
   width: 32px;
@@ -105,16 +105,16 @@ a {
   cursor: pointer;
 }
 
-button:hover,
-a:hover {
+.controls button:hover,
+.controls a:hover {
   background: rgb(255 255 255 / 12%);
 }
 
-button[aria-pressed='true'] {
+.controls button[aria-pressed='true'] {
   color: var(--accent);
 }
 
-button.danger:hover {
+.controls button.danger:hover {
   background: var(--danger);
 }
 
@@ -126,4 +126,46 @@ button.danger:hover {
 
 :host(.dragging) .grip {
   cursor: grabbing;
+}
+
+/* Shown instead of the player until the visitor allows the platform. */
+.consent {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 48px 24px 24px;
+  overflow: auto;
+  text-align: center;
+  background: var(--surface);
+}
+
+.consent p {
+  max-width: 46ch;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.consent a {
+  color: var(--accent);
+}
+
+.consent small {
+  color: var(--muted);
+}
+
+.consent button {
+  padding: 8px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--on-accent);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.consent button:hover {
+  filter: brightness(1.1);
 }

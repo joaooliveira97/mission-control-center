@@ -1,23 +1,39 @@
 @let source = stream().source;
-@switch (source.platform) {
-  @case ('youtube') {
-    <app-youtube-embed [id]="source.id" [muted]="stream().muted" />
+@if (allowed()) {
+  @switch (source.platform) {
+    @case ('youtube') {
+      <app-youtube-embed [id]="source.id" [muted]="stream().muted" />
+    }
+    @case ('twitch') {
+      <app-twitch-embed [id]="source.id" [muted]="stream().muted" />
+    }
+    @case ('kick') {
+      <app-kick-embed [id]="source.id" [muted]="stream().muted" />
+    }
+    @case ('facebook') {
+      <app-facebook-embed [id]="source.id" [muted]="stream().muted" />
+    }
+    @case ('x') {
+      <app-x-embed [id]="source.id" />
+    }
+    @case ('xBroadcast') {
+      <app-x-broadcast-embed [id]="source.id" />
+    }
   }
-  @case ('twitch') {
-    <app-twitch-embed [id]="source.id" [muted]="stream().muted" />
-  }
-  @case ('kick') {
-    <app-kick-embed [id]="source.id" [muted]="stream().muted" />
-  }
-  @case ('facebook') {
-    <app-facebook-embed [id]="source.id" [muted]="stream().muted" />
-  }
-  @case ('x') {
-    <app-x-embed [id]="source.id" />
-  }
-  @case ('xBroadcast') {
-    <app-x-broadcast-embed [id]="source.id" />
-  }
+} @else {
+  <!-- Nothing is loaded from the platform until the visitor allows it (see ConsentStore). -->
+  <div class="consent">
+    <p>
+      Este vídeo é carregado a partir do <strong>{{ provider().label }}</strong
+      >, que pode guardar cookies e recolher dados sobre ti (por exemplo, o endereço IP) segundo a
+      <a [href]="provider().privacyUrl" target="_blank" rel="noopener">política de privacidade</a>
+      dele.
+    </p>
+    <button type="button" class="primary" (click)="allow()">
+      Carregar vídeos do {{ platform().label }}
+    </button>
+    <small>A escolha fica guardada neste browser. Podes retirá-la em Privacidade.</small>
+  </div>
 }
 
 <span class="badge" [attr.data-platform]="source.platform">{{ platform().label }}</span>
