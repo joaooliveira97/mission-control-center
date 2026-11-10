@@ -1,29 +1,29 @@
-name: Reportar um erro
-description: Algo não funciona como devia no Mission Control.
+name: Report a bug
+description: Something in Mission Control doesn't work as it should.
 labels: [bug]
 body:
   - type: textarea
-    id: descricao
+    id: description
     attributes:
-      label: O que aconteceu?
-      description: Descreve o erro e o que esperavas que acontecesse.
+      label: What happened?
+      description: Describe the bug and what you expected to happen.
     validations:
       required: true
   - type: textarea
-    id: passos
+    id: steps
     attributes:
-      label: Como reproduzir
-      description: Os passos que levam ao erro, se souberes.
+      label: How to reproduce
+      description: The steps that lead to the bug, if you know them.
       placeholder: |
-        1. Colei o link ...
-        2. Carreguei em ...
+        1. Pasted the link ...
+        2. Clicked ...
   - type: input
     id: link
     attributes:
-      label: Link do ecrã
-      description: O link de partilha com os vídeos que tinhas abertos. É preenchido sozinho quando reportas pelo site.
+      label: Screen link
+      description: The share link with the videos you had open. Filled in automatically when you report from the site.
   - type: input
     id: browser
     attributes:
-      label: Browser e sistema
-      description: É preenchido sozinho quando reportas pelo site.
+      label: Browser and OS
+      description: Filled in automatically when you report from the site.

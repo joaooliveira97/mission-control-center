@@ -1,3 +1,5 @@
+import { t } from './i18n';
+
 export type Platform = 'youtube' | 'twitch' | 'kick' | 'facebook' | 'x' | 'xBroadcast';
 
 export interface Source {
@@ -193,7 +195,7 @@ export function unsupportedHint(input: string): string | null {
     return null;
   }
   if (hostOf(url) === 'fb.watch') {
-    return 'Abre o link fb.watch no browser e cola aqui o endereço completo do vídeo.';
+    return t.fbWatchHint;
   }
   return null;
 }

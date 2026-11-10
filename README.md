@@ -23,6 +23,7 @@ Um centro de controlo para ver vários diretos do YouTube ao mesmo tempo, numa s
 - Para mudar a ordem dos vídeos, arrasta-os pela pega (⠿) nos controlos, ou foca a pega e usa as setas. Os diretos continuam a tocar sem recarregar, e a nova ordem fica guardada e vai no link de partilha.
 - Relógio UTC no topo, útil para seguir as contagens decrescentes.
 - Os vídeos ficam guardados no browser automaticamente (incluindo os que tinham sido guardados na versão antiga).
+- **Privacidade:** nada é carregado de uma plataforma antes de o visitante a autorizar (o player é substituído por um aviso com link para a política de privacidade dela). A autorização é por empresa (YouTube, Twitch, Kick, Facebook, X), fica guardada no browser e pode ser retirada no botão Privacidade, que também explica que dados o site guarda. O YouTube usa `youtube-nocookie.com`. Não adiciones analytics nem outros serviços externos sem passar por esta autorização.
 - O botão de partilha copia um link com todos os vídeos e a disposição, por exemplo `…/#v=ID1,ID2,ID3&layout=focus`.
 
 ## Desenvolvimento

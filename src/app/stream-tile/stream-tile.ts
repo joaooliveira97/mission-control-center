@@ -13,6 +13,8 @@ import { TwitchEmbed } from '../embeds/twitch-embed';
 import { XBroadcastEmbed } from '../embeds/x-broadcast-embed';
 import { XEmbed } from '../embeds/x-embed';
 import { YouTubeEmbed } from '../embeds/youtube-embed';
+import { ConsentStore, PROVIDERS, providerOf } from '../consent';
+import { t } from '../i18n';
 import { Icon } from '../icon';
 import { PLATFORMS } from '../sources';
 import { Stream } from '../streams.store';
@@ -41,10 +43,21 @@ export class StreamTile {
   /** Arrow key on the drag handle: -1 moves back one position, 1 moves forward. */
   readonly nudged = output<-1 | 1>();
 
+  protected readonly t = t;
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly platform = computed(() => PLATFORMS[this.stream().source.platform]);
   protected readonly url = computed(() => this.platform().url(this.stream().source.id));
+
+  private readonly consent = inject(ConsentStore);
+  private readonly providerId = computed(() => providerOf(this.stream().source.platform));
+  protected readonly provider = computed(() => PROVIDERS[this.providerId()]);
+  protected readonly allowed = computed(() => this.consent.isAllowed(this.providerId()));
+
+  protected allow() {
+    this.consent.allow(this.providerId());
+  }
 
   protected nudge(event: KeyboardEvent) {
     const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[event.key] as

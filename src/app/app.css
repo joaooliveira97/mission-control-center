@@ -241,3 +241,30 @@ code {
     display: none;
   }
 }
+
+.privacy {
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 24px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  line-height: 1.5;
+}
+
+.privacy::backdrop {
+  background: rgb(0 0 0 / 60%);
+}
+
+.privacy h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.privacy .actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
